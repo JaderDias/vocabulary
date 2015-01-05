@@ -26,6 +26,15 @@ $(function(){
                         $("#finished").show();
                 }
         });
+        $("#no").click(function(){
+                size = Math.floor(size / 2);
+                if(size >= 1) {
+                        index += size;
+                        $("#word").text(words[index]);
+                } else {
+                        $("#finished").show();
+                }
+        });
         $.getJSON('/sort', function(result){
                 words = result;
                 size = Math.floor(words.length / 2);
