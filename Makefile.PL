@@ -9,9 +9,9 @@ $eumm_version =~ s/_//;
 
 WriteMakefile(
     NAME                => 'Vocabulary',
-    AUTHOR              => q{YOUR NAME <youremail@example.com>},
+    AUTHOR              => q{Jader Dias <jaderd@gmail.com>},
     VERSION_FROM        => 'lib/Vocabulary.pm',
-    ABSTRACT            => 'YOUR APPLICATION ABSTRACT',
+    ABSTRACT            => 'Measures the vocabulary size of the user',
     ($eumm_version >= 6.3001
       ? ('LICENSE'=> 'perl')
       : ()),
