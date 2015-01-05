@@ -41,7 +41,11 @@ get '/sort' => sub {
         $uncompress->close();
 
         my @words = sort { $ngrams{$b} <=> $ngrams{$a} } keys %ngrams;
-        return join "\n", @words;
+        return to_json \@words;
+};
+
+get '/answer' => sub {
+        template 'answer';
 };
 
 true;

@@ -1,0 +1,37 @@
+<style>
+.hidden {
+        display: none;
+}
+</style>
+<span id="word">loading...</span>
+<input type="button" value="yes" class="hidden button" id="yes" />
+<input type="button" value="no" class="hidden button" id="no" />
+<span>score</span>
+<span id="score">0</span>
+<span class="hidden" id="finished">Finished</span>
+<script>
+var words = [];
+var size = 0;
+var index = 0;
+var score = 0;
+$(function(){
+        $("#yes").click(function(){
+                score += size;
+                $('#score').text(score);
+                size = Math.floor(size / 2);
+                if(size >= 1) {
+                        index += size;
+                        $("#word").text(words[index]);
+                } else {
+                        $("#finished").show();
+                }
+        });
+        $.getJSON('/sort', function(result){
+                words = result;
+                size = Math.floor(words.length / 2);
+                index = size;
+                $("#word").text(words[index]);
+                $(".button").show();
+        });
+});
+</script>

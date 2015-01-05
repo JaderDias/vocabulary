@@ -4,7 +4,6 @@ How to load a language:
 <ul>
 <li><a href="/download">Download</a> a dictionary (up to a million unique words in size)</li>
 <li><a href="/sort">Sort</a> dictionary by the most common words</li>
-<li>Exclude the least common words (the resulting dictionary should have more than 12 thousand words, but usually less than 40 thousand)</li>
-<li>Insert the resulting list on the database, or just uniformily distributed samples of it</li>
+<li><a href="/answer">Answer</a></li>
 
 </ul>
