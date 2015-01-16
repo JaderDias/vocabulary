@@ -41,7 +41,7 @@ while(my $ngram_file_name = shift @ARGV) {
         $uncompress->close();
         print "after finishing reading $ngram_file_name with $count lines we found " . (scalar keys %ngrams) . " words\n";
         my @words = sort { $ngrams{$b} <=> $ngrams{$a} } keys %ngrams;
-        %ngrams = map { $_ => $ngrams{$_} } @words[0..$max_words];
+        %ngrams = map { $_ => $ngrams{$_} } @words[0..($max_words-1)];
         print "reduced to " . (scalar keys %ngrams) . " words\n";
 }
 

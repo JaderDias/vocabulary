@@ -1,46 +1,24 @@
-<style>
-.hidden {
-        display: none;
-}
-</style>
-<span id="word">loading...</span>
-<input type="button" value="yes" class="hidden button" id="yes" />
-<input type="button" value="no" class="hidden button" id="no" />
-<span>score</span>
-<span id="score">0</span>
-<span class="hidden" id="finished">Finished</span>
-<script>
-var words = [];
-var size = 0;
-var index = 0;
-var score = 0;
-$(function(){
-        $("#yes").click(function(){
-                score += size;
-                $('#score').text(score);
-                size = Math.floor(size / 2);
-                if(size >= 1) {
-                        index += size;
-                        $("#word").text(words[index]);
-                } else {
-                        $("#finished").show();
-                }
-        });
-        $("#no").click(function(){
-                size = Math.floor(size / 2);
-                if(size >= 1) {
-                        index += size;
-                        $("#word").text(words[index]);
-                } else {
-                        $("#finished").show();
-                }
-        });
-        $.getJSON('/sort', function(result){
-                words = result;
-                size = Math.floor(words.length / 2);
-                index = size;
-                $("#word").text(words[index]);
-                $(".button").show();
-        });
-});
-</script>
+<div class="container">
+        <div class="row">
+                <h1 class="col-md-5 text-center"><small>Estimate your</small> vocabulary <small>size</small></h1>
+        </div>
+        <div class="row">
+                <h3 class="col-md-5 text-center">Do you know this word?</h2>
+        </div>
+        <div class="row">
+                <div>&nbsp;</div>
+                <div class="col-md-3 col-md-offset-1 btn btn-lg btn-default" disabled="disabled" id="word">loading...</div>
+        </div>
+        <div class="row">
+                <div>&nbsp;</div>
+                <input type="button" value="no" class="col-md-1 col-md-offset-1 btn btn-danger btn-lg" id="no" />
+                <input type="button" value="yes" class="col-md-1 col-md-offset-1 btn btn-success btn-lg" id="yes" />
+        </div>
+        <div class="row">
+                <div>&nbsp;</div>
+                <h4 class="col-md-5 text-center"><small>we estimate that you know about</small> <span id="score">0</span> <small>words in English</small></h4>
+                <div>&nbsp;</div>
+                <span id="finished">Finished</span>
+        </div>
+</div>
+<script src="<% request.uri_base %>/javascripts/answer.js"></script>
