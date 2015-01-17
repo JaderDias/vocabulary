@@ -3,10 +3,9 @@ var size = 0;
 var index = 0;
 var score = 0;
 function finish() {
-        $("#finished").show();
+        $("#form").hide();
 }
 $(function(){
-        $("#finished").hide();
         $("#yes").click(function(){
                 score += size;
                 $('#score').text(score);
