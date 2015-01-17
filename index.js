@@ -11,7 +11,7 @@ function finish() {
 }
 
 function show_vocabulary_size() {
-        var size = Math.round(yes_answers * words.length / round);
+        var size = Math.floor(yes_answers * words.length / round);
         $("#result").html(
                 '<small>we estimate that you know</small> <span id="score">'
                 + size +
@@ -44,6 +44,7 @@ function get_next_word(answer) {
         index = Math.round((numerator * words.length) / denominator);
         $("#word").text(words[index]);
 }
+
 $(function(){
         $("#yes").click(function(){
                 get_next_word('yes');

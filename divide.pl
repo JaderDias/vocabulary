@@ -1,37 +1,34 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
+use Array::Utils qw/array_diff/;
+use List::Util qw/min/;
 
-my $max_words = 40000;
-my $count = 0;
-my $previous_word;
-my $previous_count = 0;
-my %ngrams = ();
+my @exclude   = read_lines('exclude');
+my @words     = read_lines($ARGV[0]);
 
-my @words = sort { $ngrams{$b} <=> $ngrams{$a} } keys %ngrams;
-my $questionnaire_length = 20;
-for my $output(qw/large medium small/) {
-        my @lines;
-        my $numerator = 1;
-        my $denominator = 2;
-        for my $i(1..$questionnaire_length) {
-                my $index = int(($numerator * (scalar @words)) / $denominator);
-                push @lines, $words[$index];
-                $numerator += 2;
-                if($numerator >= $denominator) {
-                        $denominator *= 2;
-                        $numerator = 1;
-                }
-        }
+@words = array_diff(@words, @exclude);
 
-        write_lines("$output.json", @lines);
-        @words = @words[0..(-1 + scalar @words)];
-        $questionnaire_length *= 2;
-}
+my $max_index = min($#words, 50000 - 1);
+@words = @words[0..$max_index];
+write_lines('dictionary', @words);
 
 sub write_lines {
         my $file_name = shift;
         open(my $fh, '>', $file_name) or die "Could not open file '$file_name' $!";
-        print $fh join '\n', @_;
+        print $fh join "\n", @_;
         close $fh;
+}
+
+sub read_lines {
+        my ($file_name) = @_;
+        my @lines = ();
+        open(my $fh, '<', $file_name) or die "Cold not open file '$file_name' $!";
+        while (my $row = <$fh>) {
+                chomp $row;
+                push @lines, $row;
+        }
+
+        close $fh;
+        return @lines;
 }

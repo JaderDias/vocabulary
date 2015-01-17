@@ -3,9 +3,9 @@ use strict;
 use warnings;
 use IO::Uncompress::Unzip qw(unzip $UnzipError);
 use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
-use JSON qw(to_json);
+use List::Util qw/min/;
 
-my $max_words = 40000;
+my $max_words = 200000;
 my $count = 0;
 my $previous_word;
 my $previous_count = 0;
@@ -27,7 +27,7 @@ while(my $ngram_file_name = shift @ARGV) {
             print "from $count lines we got " . (scalar keys %ngrams) . " words\n" if ($count % 1e7) == 0;
             next unless($line  =~ /^([a-z]+)\s+(\d+)\s+(\d+)\s/);
             my ($current_word, $year, $current_count) = ($1, $2, $3);
-            next if $year < 1970;
+            next if $year < 1980;
             if(($previous_word // '') eq $current_word) {
                 $previous_count += $current_count;
                 next;
@@ -41,12 +41,13 @@ while(my $ngram_file_name = shift @ARGV) {
         $uncompress->close();
         print "after finishing reading $ngram_file_name with $count lines we found " . (scalar keys %ngrams) . " words\n";
         my @words = sort { $ngrams{$b} <=> $ngrams{$a} } keys %ngrams;
-        %ngrams = map { $_ => $ngrams{$_} } @words[0..($max_words-1)];
+        my $max_index = min($#words, $max_words - 1);
+        %ngrams = map { $_ => $ngrams{$_} } @words[0..$max_index];
         print "reduced to " . (scalar keys %ngrams) . " words\n";
 }
 
 my @words = sort { $ngrams{$b} <=> $ngrams{$a} } keys %ngrams;
 my $output = 'public/dictionary.json';
 open(my $fh, '>', $output) or die "Could not open file '$output' $!";
-print $fh to_json \@words;
+print $fh join "\n", @words;
 close $fh;
