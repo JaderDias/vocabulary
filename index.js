@@ -36,15 +36,22 @@ function show_vocabulary_size() {
                 return;
         }
 
+        var result = last_round * 5;
         $("#result").html(
                 '<small>After</small> '
                 + round +
                 ' <small>answers, it seems that you know about</small> <span id="score">'
-                + (last_round * 5) +
+                + result +
                 '</span> <small>words in</small> '
                 + language +
                 '<small>'
                 + remaining
+                + "<br/><a href='https://www.facebook.com/dialog/feed?"
+                + "app_id=879219325475623"
+                + "&display=popup"
+                + "&caption=I%20know%20" + result + "%20words%20in%20" + language
+                + "&link=https%3A%2F%2Fjaderdias.github.io%2Fvocabulary%2F"
+                + "&redirect_uri=https%3A%2F%2Fjaderdias.github.io%2Fvocabulary%2F'>Share on Facebook</a>"
         );
 }
 
