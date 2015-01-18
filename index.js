@@ -25,7 +25,7 @@ function show_vocabulary_size() {
                         + yes_answers +
                         '<small> out of </small>'
                         + round +
-                        '<small> presented words.<br/>The first estimate will be given after you answer</small> '
+                        '<small> presented words.<br/>A better estimate can be given after you answer</small> '
                         + remaining +
                         ' <small> more questions</small> '
                 );
@@ -33,7 +33,7 @@ function show_vocabulary_size() {
         }
 
         $("#result").html(
-                '<small>we estimate that you know</small> <span id="score">'
+                '<small>you know approximately</small> <span id="score">'
                 + (last_round * 5) +
                 '</span> <small>words in</small> '
                 + language +
