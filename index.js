@@ -18,30 +18,31 @@ function show_vocabulary_size() {
                 last_round = Math.floor(yes_answers * words.length / round);
         }
 
-        var remaining = answer_in - round;
+        var remaining = '.<br/>A better estimate can be given after you answer</small> '
+                + ( answer_in - round ) +
+                ' <small> more questions</small> ';
+
         if(round < min_answers) {
                 $("#result").html(
                         '<small>you know </small>'
                         + yes_answers +
                         '<small> out of </small>'
                         + round +
-                        '<small> presented words.<br/>A better estimate can be given after you answer</small> '
-                        + remaining +
-                        ' <small> more questions</small> '
+                        '<small> presented words'
+                        + remaining
                 );
                 return;
         }
 
         $("#result").html(
-                '<small>you know approximately</small> <span id="score">'
+                '<small>You know approximately</small> <span id="score">'
                 + (last_round * 5) +
                 '</span> <small>words in</small> '
                 + language +
                 ' <small>after</small> '
                 + round +
-                ' <small>answers.<br/>We can give you a better estimate after you answer</small> '
-                + remaining +
-                ' <small> more questions</small>'
+                ' <small>answers'
+                + remaining
         );
 }
 
