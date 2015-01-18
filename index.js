@@ -26,7 +26,7 @@ function show_vocabulary_size() {
 
         if(round < min_answers) {
                 $("#result").html(
-                        '<small>you know </small>'
+                        '<small>You know </small>'
                         + yes_answers +
                         '<small> out of </small>'
                         + round +
@@ -37,13 +37,13 @@ function show_vocabulary_size() {
         }
 
         $("#result").html(
-                '<small>You know approximately</small> <span id="score">'
+                '<small>After</small> '
+                + round +
+                ' <small>answers, it seems that you know about</small> <span id="score">'
                 + (last_round * 5) +
                 '</span> <small>words in</small> '
                 + language +
-                ' <small>after</small> '
-                + round +
-                ' <small>answers'
+                '<small>'
                 + remaining
         );
 }
