@@ -11,7 +11,7 @@ my $previous_word;
 my $previous_count = 0;
 my %ngrams = ();
 my $language = shift @ARGV;
-my $validation = '[a-zùûüÿàâæçéèêëïîôœ\-]+';
+my $validation = '[a-zÿàáâæçéèêëïîíóúüùûôœñ\-]+';
 
 while(my $ngram_file_name = shift @ARGV) {
         my $class;
