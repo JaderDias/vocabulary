@@ -63,6 +63,12 @@ function get_next_word(answer) {
 }
 
 $(function(){
+        var lang = GetURLParameter('lang');
+        if(lang == 'fre') {
+                language_code = lang;
+                language = 'French';
+        }
+
         $("#yes").click(function(){
                 yes_answers++;
                 get_next_word('yes');
@@ -75,3 +81,16 @@ $(function(){
                 get_next_word();
         });
 });
+
+function GetURLParameter(sParam) {
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++)
+    {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam)
+        {
+            return sParameterName[1];
+        }
+    }
+}
