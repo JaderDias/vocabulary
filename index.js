@@ -67,6 +67,11 @@ function get_next_word(answer) {
 
 $(function(){
         var lang = GetURLParameter('lang');
+        if(lang == 'spa') {
+                language_code = lang;
+                language = 'Spanish';
+        }
+
         if(lang == 'fre') {
                 language_code = lang;
                 language = 'French';
