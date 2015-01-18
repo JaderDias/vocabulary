@@ -20,7 +20,9 @@ function show_vocabulary_size() {
 
         var remaining = '.<br/>A better estimate can be given after you answer</small> '
                 + ( answer_in - round ) +
-                ' <small> more questions</small> ';
+                ' <small> more questions.<br/>The estimate is based on a dictionary of the 50,000 most common words in books written in</small> '
+                + language +
+                ' <small>published since 1980.</small>';
 
         if(round < min_answers) {
                 $("#result").html(
