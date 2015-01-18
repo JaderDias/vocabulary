@@ -5,19 +5,43 @@ var record = {};
 var yes_answers = 0;
 var round = 0;
 var min_rounds = 20;
+var language = 'English';
+var language_code = 'eng';
+var min_answers = 15;
+var last_round;
+var answer_in = min_answers;
 var index;
-function finish() {
-        $("#form").hide();
-}
 
 function show_vocabulary_size() {
-        var size = Math.floor(yes_answers * words.length / round);
+        if(round == answer_in) {
+                answer_in = -1 + ( (answer_in + 1) * 2 );
+                last_round = Math.floor(yes_answers * words.length / round);
+        }
+
+        var remaining = answer_in - round;
+        if(round < min_answers) {
+                $("#result").html(
+                        '<small>you know </small>'
+                        + yes_answers +
+                        '<small> out of </small>'
+                        + round +
+                        '<small> presented words.<br/>The first estimate will be given after you answer</small> '
+                        + remaining +
+                        ' <small> more questions</small> '
+                );
+                return;
+        }
+
         $("#result").html(
                 '<small>we estimate that you know</small> <span id="score">'
-                + size +
-                '</span> <small>words in</small> English <small>after</small> '
+                + (last_round * 5) +
+                '</span> <small>words in</small> '
+                + language +
+                ' <small>after</small> '
                 + round +
-                ' <small>answers</small>'
+                ' <small>answers.<br/>We can give you a better estimate after you answer</small> '
+                + remaining +
+                ' <small> more questions</small>'
         );
 }
 
@@ -25,13 +49,6 @@ function get_next_word(answer) {
         if(index) {
                 record[index.toString()] = answer;
                 round++;
-        }
-
-        if(answer == 'yes') {
-                yes_answers++;
-        }
-        
-        if(round >= min_rounds) {
                 show_vocabulary_size();
         }
 
@@ -47,12 +64,13 @@ function get_next_word(answer) {
 
 $(function(){
         $("#yes").click(function(){
+                yes_answers++;
                 get_next_word('yes');
         });
         $("#no").click(function(){
                 get_next_word('no');
         });
-        $.getJSON('dictionary.json', function(result){
+        $.getJSON(language_code + '.sample.json', function(result){
                 words = result;
                 get_next_word();
         });

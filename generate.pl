@@ -10,6 +10,8 @@ my $count = 0;
 my $previous_word;
 my $previous_count = 0;
 my %ngrams = ();
+my $language = shift @ARGV;
+my $validation = '[a-zùûüÿàâæçéèêëïîôœ\-]+';
 
 while(my $ngram_file_name = shift @ARGV) {
         my $class;
@@ -25,7 +27,7 @@ while(my $ngram_file_name = shift @ARGV) {
         while(my $line = $uncompress->getline()) {
             $count++;
             print "from $count lines we got " . (scalar keys %ngrams) . " words\n" if ($count % 1e7) == 0;
-            next unless($line  =~ /^([a-z]+)\s+(\d+)\s+(\d+)\s/);
+            next unless($line  =~ /^($validation)\s+(\d+)\s+(\d+)\s/);
             my ($current_word, $year, $current_count) = ($1, $2, $3);
             next if $year < 1980;
             if(($previous_word // '') eq $current_word) {
@@ -47,7 +49,7 @@ while(my $ngram_file_name = shift @ARGV) {
 }
 
 my @words = sort { $ngrams{$b} <=> $ngrams{$a} } keys %ngrams;
-my $output = 'public/dictionary.json';
+my $output = "$language.dictionary";
 open(my $fh, '>', $output) or die "Could not open file '$output' $!";
 print $fh join "\n", @words;
 close $fh;
