@@ -84,8 +84,8 @@ $(function(){
         $("#no").click(function(){
                 get_next_word('no');
         });
-        $.getJSON(language_code + '.sample.json', function(result){
-                words = result;
+        $.get(language_code + '.sample.csv', function(result){
+                words = result.split("\n");
                 get_next_word();
         });
 });
