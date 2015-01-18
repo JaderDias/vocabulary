@@ -5,10 +5,10 @@ use Array::Utils qw/array_diff/;
 use List::Util qw/min/;
 use JSON qw/to_json/;
 
-my ($language, $input) = @ARGV;
+my ($language) = @ARGV;
 
 my @exclude   = read_lines("$language.exclude");
-my @words     = read_lines($input);
+my @words     = read_lines("../$language.dictionary");
 
 @words = array_diff(@words, @exclude);
 

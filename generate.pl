@@ -49,7 +49,7 @@ while(my $ngram_file_name = shift @ARGV) {
 }
 
 my @words = sort { $ngrams{$b} <=> $ngrams{$a} } keys %ngrams;
-my $output = "$language.dictionary";
+my $output = "../$language.dictionary";
 open(my $fh, '>', $output) or die "Could not open file '$output' $!";
 print $fh join "\n", @words;
 close $fh;
