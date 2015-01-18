@@ -8,14 +8,14 @@ var min_rounds = 20;
 var language = 'English';
 var language_code = 'eng';
 var min_answers = 15;
-var last_round;
 var answer_in = min_answers;
 var index;
+var score;
 
 function show_vocabulary_size() {
         if(round == answer_in) {
                 answer_in = -1 + ( (answer_in + 1) * 2 );
-                last_round = Math.floor(yes_answers * words.length / round);
+                score = Math.floor(5 * yes_answers * words.length / round);
         }
 
         var remaining = '.<br/>A better estimate can be given after you answer</small> '
@@ -36,22 +36,15 @@ function show_vocabulary_size() {
                 return;
         }
 
-        var result = last_round * 5;
         $("#result").html(
                 '<small>After</small> '
                 + round +
                 ' <small>answers, it seems that you know about</small> <span id="score">'
-                + result +
+                + score +
                 '</span> <small>words in</small> '
                 + language +
                 '<small>'
                 + remaining
-                + "<br/><a href='https://www.facebook.com/dialog/feed?"
-                + "app_id=879219325475623"
-                + "&display=popup"
-                + "&caption=I%20know%20" + result + "%20words%20in%20" + language
-                + "&link=https%3A%2F%2Fjaderdias.github.io%2Fvocabulary%2F"
-                + "&redirect_uri=https%3A%2F%2Fjaderdias.github.io%2Fvocabulary%2F'>Share on Facebook</a>"
         );
 }
 
@@ -84,6 +77,13 @@ $(function(){
                 language = 'French';
         }
 
+        $("#fb-share").click(function(){
+                FB.ui({
+                  caption: "It's estimated I know " + result + " words in " + language + " based on " + round + " answers I gave. Click on the link to know the size of your vocabulary."
+                  method: 'share',
+                  href: 'https://jaderdias.github.io/vocabulary/',
+                }, function(response){});
+        });
         $("#yes").click(function(){
                 yes_answers++;
                 get_next_word('yes');

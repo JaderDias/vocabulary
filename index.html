@@ -10,6 +10,23 @@
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 </head>
 <body>
+  <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '879219325475623',
+          xfbml      : true,
+          version    : 'v2.1'
+        });
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>
 <div class="container">
         <div class="row">
                 <h1 class="col-md-12 text-center"><small>Estimate your</small> vocabulary <small>size</small></h1>
@@ -27,6 +44,9 @@
                 <input type="button" value="no" class="col-lg-1 col-md-2 col-sm-3 col-xs-3 col-lg-offset-4 col-md-offset-3 col-sm-offset-2 col-xs-offset-2 btn btn-danger btn-lg" id="no" />
                 <input type="button" value="yes" class="col-lg-1 col-md-2 col-sm-3 col-xs-3 col-lg-offset-2 col-md-offset-2 col-sm-offset-2 col-xs-offset-2 btn btn-success btn-lg" id="yes" />
         </div>
+        <div class="row">
+                <div>&nbsp;</div>
+                <div class="btn btn-lg btn-primary col-md-2 col-md-offset-5" id="fb-share">Share on Facebook</div>
         </div>
         <div class="row">
                 <div>&nbsp;</div>
