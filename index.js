@@ -79,7 +79,7 @@ $(function(){
 
         $("#fb-share").click(function(){
                 FB.ui({
-                  caption: "It's estimated I know " + result + " words in " + language + " based on " + round + " answers I gave. Click on the link to know the size of your vocabulary."
+                  caption: "It's estimated I know " + result + " words in " + language + " based on " + round + " answers I gave. Click on the link to know the size of your vocabulary.",
                   method: 'share',
                   href: 'https://jaderdias.github.io/vocabulary/',
                 }, function(response){});
