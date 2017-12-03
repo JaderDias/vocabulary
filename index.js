@@ -1,35 +1,24 @@
-var words = [];
-var numerator = 1;
-var denominator = 2;
-var record = {};
-var yes_answers = 0;
-var round = 0;
-var min_rounds = 20;
-var language = 'English';
-var language_code = 'eng';
-var min_answers = 15;
-var answer_in = min_answers;
-var index;
-var score;
+var data = {};
+var cur_data;
 
 function show_vocabulary_size() {
-        if(round == answer_in) {
-                answer_in = -1 + ( (answer_in + 1) * 2 );
-                score = Math.floor(5 * yes_answers * words.length / round);
+        if(cur_data.round == cur_data.answer_in) {
+                cur_data.answer_in = -1 + ( (cur_data.answer_in + 1) * 2 );
+                cur_data.score = Math.floor(5 * cur_data.yes_answers * cur_data.words.length / cur_data.round);
         }
 
         var remaining = '.<br/>A better estimate can be given after you answer</small> '
-                + ( answer_in - round ) +
+                + ( cur_data.answer_in - cur_data.round ) +
                 ' <small> more questions.<br/>The estimate is based on a dictionary of the 50,000 most common words in books written in</small> '
-                + language +
+                + cur_data.language +
                 ' <small>published since 1980.</small>';
 
-        if(round < min_answers) {
+        if(cur_data.round < cur_data.min_answers) {
                 $("#result").html(
                         '<small>You know </small>'
-                        + yes_answers +
+                        + cur_data.yes_answers +
                         '<small> out of </small>'
-                        + round +
+                        + cur_data.round +
                         '<small> presented words'
                         + remaining
                 );
@@ -38,64 +27,82 @@ function show_vocabulary_size() {
 
         $("#result").html(
                 '<small>After</small> '
-                + round +
+                + cur_data.round +
                 ' <small>answers, it seems that you know about</small> <span id="score">'
-                + score +
+                + cur_data.score +
                 '</span> <small>words in</small> '
-                + language +
+                + cur_data.language +
                 '<small>'
                 + remaining
         );
 }
 
 function get_next_word(answer) {
-        if(index) {
-                record[index.toString()] = answer;
-                round++;
-                show_vocabulary_size();
+        if(cur_data.index) {
+                cur_data.record[cur_data.index.toString()] = answer;
+                cur_data.round++;
         }
 
-        numerator += 2;
-        if(numerator > denominator) {
-                numerator = 1;
-                denominator *= 2;
+	show_vocabulary_size();
+        cur_data.numerator += 2;
+        if(cur_data.numerator > cur_data.denominator) {
+                cur_data.numerator = 1;
+                cur_data.denominator *= 2;
         }
 
-        index = Math.round((numerator * words.length) / denominator);
-        $("#word").text(words[index]);
+        cur_data.index = Math.round((cur_data.numerator * cur_data.words.length) / cur_data.denominator);
+        $("#word").text(cur_data.words[cur_data.index]);
 }
 
 $(function(){
-        var lang = GetURLParameter('lang');
-        if(lang == 'spa') {
-                language_code = lang;
-                language = 'Spanish';
-        }
-
-        if(lang == 'fre') {
-                language_code = lang;
-                language = 'French';
-        }
+        var lang = GetURLParameter('lang') || 'eng';
+	$("#lang").val(lang);
 
         $("#fb-share").click(function(){
                 FB.ui({
-                  caption: "It's estimated I know " + result + " words in " + language + " based on " + round + " answers I gave. Click on the link to know the size of your vocabulary.",
+                  caption: "It's estimated I know " + cur_data.score + " words in " + cur_data.language + " based on " + cur_data.round + " answers I gave. Click on the link to know the size of your vocabulary.",
                   method: 'share',
                   href: 'https://jaderdias.github.io/vocabulary/',
                 }, function(response){});
         });
         $("#yes").click(function(){
-                yes_answers++;
+                cur_data.yes_answers++;
                 get_next_word('yes');
         });
         $("#no").click(function(){
                 get_next_word('no');
         });
+	loadDictionary(0, lang);
+	$("select").change(loadDictionary);
+});
+
+function loadDictionary (event, language_code) {
+	language_code = language_code || $("#lang").val();
+	cur_data = data[language_code];
+	if ( cur_data ) {
+		$("#word").text(cur_data.words[cur_data.index]);
+                get_next_word();
+		return;
+	}
+
+	cur_data = {
+		answer_in : 15,
+		denominator : 2,
+		index : 0,
+		language: $("#lang option:selected").html(),
+		min_answers : 15,
+		numerator : 1,
+		record : {},
+		round : 0,
+		score : 0,
+		yes_answers : 0,
+	};
+	data[language_code] = cur_data;
         $.get(language_code + '.sample.csv', function(result){
-                words = result.split("\n");
+                cur_data.words = result.split("\n");
                 get_next_word();
         });
-});
+}
 
 function GetURLParameter(sParam) {
     var sPageURL = window.location.search.substring(1);
