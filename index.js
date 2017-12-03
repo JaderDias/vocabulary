@@ -2,23 +2,23 @@ var data = {};
 var cur_data;
 
 function show_vocabulary_size() {
-        if(cur_data.round == cur_data.answer_in) {
+        if(cur_data.nr_questions == cur_data.answer_in) {
                 cur_data.answer_in = -1 + ( (cur_data.answer_in + 1) * 2 );
-                cur_data.score = Math.floor(5 * cur_data.yes_answers * cur_data.words.length / cur_data.round);
+                cur_data.score = Math.floor(5 * cur_data.yes_answers * cur_data.words.length / cur_data.nr_questions);
         }
 
         var remaining = '.<br/>A better estimate can be given after you answer</small> '
-                + ( cur_data.answer_in - cur_data.round ) +
+                + ( cur_data.answer_in - cur_data.nr_questions ) +
                 ' <small> more questions.<br/>The estimate is based on a dictionary of the 50,000 most common words in books written in</small> '
                 + cur_data.language +
                 ' <small>published since 1980.</small>';
 
-        if(cur_data.round < cur_data.min_answers) {
+        if(cur_data.nr_questions < cur_data.min_answers) {
                 $("#result").html(
                         '<small>You know </small>'
                         + cur_data.yes_answers +
                         '<small> out of </small>'
-                        + cur_data.round +
+                        + cur_data.nr_questions +
                         '<small> presented words'
                         + remaining
                 );
@@ -27,7 +27,7 @@ function show_vocabulary_size() {
 
         $("#result").html(
                 '<small>After</small> '
-                + cur_data.round +
+                + cur_data.nr_questions +
                 ' <small>answers, it seems that you know about</small> <span id="score">'
                 + cur_data.score +
                 '</span> <small>words in</small> '
@@ -40,8 +40,11 @@ function show_vocabulary_size() {
 function get_next_word(answer) {
         if(cur_data.index) {
                 cur_data.record[cur_data.index.toString()] = answer;
-                cur_data.round++;
         }
+
+	if(answer) {
+                cur_data.nr_questions++;
+	}
 
 	show_vocabulary_size();
         cur_data.numerator += 2;
@@ -60,7 +63,7 @@ $(function(){
 
         $("#fb-share").click(function(){
                 FB.ui({
-                  caption: "It's estimated I know " + cur_data.score + " words in " + cur_data.language + " based on " + cur_data.round + " answers I gave. Click on the link to know the size of your vocabulary.",
+                  caption: "It's estimated I know " + cur_data.score + " words in " + cur_data.language + " based on " + cur_data.nr_questions + " answers I gave. Click on the link to know the size of your vocabulary.",
                   method: 'share',
                   href: 'https://jaderdias.github.io/vocabulary/',
                 }, function(response){});
@@ -91,9 +94,9 @@ function loadDictionary (event, language_code) {
 		index : 0,
 		language: $("#lang option:selected").html(),
 		min_answers : 15,
+		nr_questions : 1,
 		numerator : 1,
 		record : {},
-		round : 0,
 		score : 0,
 		yes_answers : 0,
 	};
