@@ -2,39 +2,42 @@ var data = {};
 var cur_data;
 
 function show_vocabulary_size() {
-        if(cur_data.nr_questions == cur_data.answer_in) {
-                cur_data.answer_in = -1 + ( (cur_data.answer_in + 1) * 2 );
-                cur_data.score = Math.floor(5 * cur_data.yes_answers * cur_data.words.length / cur_data.nr_questions);
-        }
+	var html = '';
+	if ( cur_data.nr_questions ) {
+		if(cur_data.nr_questions == cur_data.answer_in) {
+			cur_data.answer_in = -1 + ( (cur_data.answer_in + 1) * 2 );
+			cur_data.score = Math.floor(5 * cur_data.yes_answers * cur_data.words.length / cur_data.nr_questions);
+		}
 
-        var remaining = '.<br/>A better estimate can be given after you answer</small> '
-                + ( cur_data.answer_in - cur_data.nr_questions ) +
-                ' <small> more questions.<br/>The estimate is based on a dictionary of the 50,000 most common words in books written in</small> '
-                + cur_data.language +
-                ' <small>published since 1980.</small>';
+		var remaining = '.<br/>A better estimate can be given after you answer</small> '
+			+ ( cur_data.answer_in - cur_data.nr_questions ) +
+			' <small> more questions.<br/>The estimate is based on a dictionary of the 50,000 most common words in books written in</small> '
+			+ cur_data.language +
+			' <small>published since 1980.</small>';
 
-        if(cur_data.nr_questions < cur_data.min_answers) {
-                $("#result").html(
-                        '<small>You know </small>'
-                        + cur_data.yes_answers +
-                        '<small> out of </small>'
-                        + cur_data.nr_questions +
-                        '<small> presented words'
-                        + remaining
-                );
-                return;
-        }
+		if(cur_data.nr_questions < cur_data.min_answers) {
+			html =
+				'<small>You know </small>'
+				+ cur_data.yes_answers +
+				'<small> out of </small>'
+				+ cur_data.nr_questions +
+				'<small> presented words'
+				+ remaining;
+		}
+		else {
+			html =
+				'<small>After</small> '
+				+ cur_data.nr_questions +
+				' <small>answers, it seems that you know about</small> <span id="score">'
+				+ cur_data.score +
+				'</span> <small>words in</small> '
+				+ cur_data.language +
+				'<small>'
+				+ remaining;
+		}
+	}
 
-        $("#result").html(
-                '<small>After</small> '
-                + cur_data.nr_questions +
-                ' <small>answers, it seems that you know about</small> <span id="score">'
-                + cur_data.score +
-                '</span> <small>words in</small> '
-                + cur_data.language +
-                '<small>'
-                + remaining
-        );
+        $("#result").html(html);
 }
 
 function get_next_word(answer) {
@@ -47,6 +50,7 @@ function get_next_word(answer) {
 	}
 
 	show_vocabulary_size();
+
         cur_data.numerator += 2;
         if(cur_data.numerator > cur_data.denominator) {
                 cur_data.numerator = 1;
@@ -94,7 +98,7 @@ function loadDictionary (event, language_code) {
 		index : 0,
 		language: $("#lang option:selected").html(),
 		min_answers : 15,
-		nr_questions : 1,
+		nr_questions : 0,
 		numerator : 1,
 		record : {},
 		score : 0,
