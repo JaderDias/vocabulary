@@ -7,6 +7,7 @@ function show_vocabulary_size() {
 		if(cur_data.nr_questions == cur_data.answer_in) {
 			cur_data.answer_in = -1 + ( (cur_data.answer_in + 1) * 2 );
 			cur_data.score = Math.floor(5 * cur_data.yes_answers * cur_data.words.length / cur_data.nr_questions);
+			cur_data.last_milestone = cur_data.nr_questions;
 		}
 
 		var remaining = '.<br/>A better estimate can be given after you answer</small> '
@@ -26,8 +27,8 @@ function show_vocabulary_size() {
 		}
 		else {
 			html =
-				'<small>After</small> '
-				+ cur_data.nr_questions +
+				'<small>Based on</small> '
+				+ cur_data.last_milestone +
 				' <small>answers, it seems that you know about</small> <span id="score">'
 				+ cur_data.score +
 				'</span> <small>words in</small> '
@@ -41,10 +42,6 @@ function show_vocabulary_size() {
 }
 
 function get_next_word(answer) {
-        if(cur_data.index) {
-                cur_data.record[cur_data.index.toString()] = answer;
-        }
-
 	if(answer) {
                 cur_data.nr_questions++;
 	}
@@ -62,12 +59,16 @@ function get_next_word(answer) {
 }
 
 $(function(){
-        var lang = GetURLParameter('lang') || 'eng';
+        var lang = 'eng';
+	if ( document.location.hash ) {
+		lang = document.location.hash.substr(1);
+	}
+
 	$("#lang").val(lang);
 
         $("#fb-share").click(function(){
                 FB.ui({
-                  caption: "It's estimated I know " + cur_data.score + " words in " + cur_data.language + " based on " + cur_data.nr_questions + " answers I gave. Click on the link to know the size of your vocabulary.",
+                  caption: "It's estimated I know " + cur_data.score + " words in " + cur_data.language + " based on " + cur_data.last_milestone + " answers I gave. Click on the link to know the size of your vocabulary.",
                   method: 'share',
                   href: 'https://jaderdias.github.io/vocabulary/',
                 }, function(response){});
@@ -79,12 +80,15 @@ $(function(){
         $("#no").click(function(){
                 get_next_word('no');
         });
-	loadDictionary(0, lang);
-	$("select").change(loadDictionary);
+	loadDictionary(lang);
+	$("select").change(function() {
+		language_code = $("#lang").val();
+		document.location.hash = language_code;
+		loadDictionary(language_code);
+	});
 });
 
-function loadDictionary (event, language_code) {
-	language_code = language_code || $("#lang").val();
+function loadDictionary (language_code) {
 	cur_data = data[language_code];
 	if ( cur_data ) {
 		$("#word").text(cur_data.words[cur_data.index]);
@@ -99,8 +103,8 @@ function loadDictionary (event, language_code) {
 		language: $("#lang option:selected").html(),
 		min_answers : 15,
 		nr_questions : 0,
+		last_milestone : 0,
 		numerator : 1,
-		record : {},
 		score : 0,
 		yes_answers : 0,
 	};
@@ -109,17 +113,4 @@ function loadDictionary (event, language_code) {
                 cur_data.words = result.split("\n");
                 get_next_word();
         });
-}
-
-function GetURLParameter(sParam) {
-    var sPageURL = window.location.search.substring(1);
-    var sURLVariables = sPageURL.split('&');
-    for (var i = 0; i < sURLVariables.length; i++)
-    {
-        var sParameterName = sURLVariables[i].split('=');
-        if (sParameterName[0] == sParam)
-        {
-            return sParameterName[1];
-        }
-    }
 }
